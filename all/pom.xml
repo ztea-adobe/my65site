@@ -53,6 +53,18 @@
                     <packageType>container</packageType>
                     <!-- skip sub package validation for now as some vendor packages like CIF apps will not pass -->
                     <skipSubPackageValidation>true</skipSubPackageValidation>
+                    <validatorsSettings>
+                        <jackrabbit-filter>
+                            <options>
+                                <validRoots>/apps,/content,/content/dam</validRoots>
+                            </options>
+                        </jackrabbit-filter>
+                        <jackrabbit-packagetype>
+                            <options>
+                                <allowComplexFilterRulesInApplicationPackages>true</allowComplexFilterRulesInApplicationPackages>
+                            </options>
+                        </jackrabbit-packagetype>
+                    </validatorsSettings>
                     <embeddeds>
                         <embedded>
                             <groupId>com.mycompany.aem</groupId>

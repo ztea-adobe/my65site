@@ -2,7 +2,7 @@
 
 ## Overview
 
-This solution automatically adds a custom property `myPotato` with value `baked` to draft metadata nodes whenever a user clicks the Save button on an adaptive form in AEM Forms.
+This solution automatically adds a custom property `myCustomPropertyName` with value `baked` to draft metadata nodes whenever a user clicks the Save button on an adaptive form in AEM Forms.
 
 ## Architecture
 
@@ -95,7 +95,7 @@ Check that the service user was created:
    - Navigate to CRXDE Lite: `http://localhost:4502/crx/de/index.jsp`
    - Browse to: `/content/forms/fp/admin/drafts/metadata`
    - Find your draft node (pattern: `[DRAFT_ID]_af`)
-   - Verify the property `myPotato` exists with value `baked`
+   - Verify the property `myCustomPropertyName` exists with value `baked`
 
 ### Automated Testing
 
@@ -126,7 +126,7 @@ Listener calls DraftEnrichmentService.isDraftNode()
     ↓
 If valid draft → DraftEnrichmentService.enrichDraft()
     ↓
-Service adds property: myPotato = "baked"
+Service adds property: myCustomPropertyName = "my cust property value"
     ↓
 Changes committed to repository
 ```
@@ -139,7 +139,7 @@ Changes committed to repository
 - Resource type: `fd/fp/components/guidereload`
 
 **Property Addition:**
-- Property name: `myPotato`
+- Property name: `myCustomPropertyName`
 - Property value: `baked`
 - Property type: String
 
@@ -157,7 +157,7 @@ tail -f crx-quickstart/logs/error.log | grep -i "draft"
 
 **Success:**
 ```
-INFO [DraftEnrichmentServiceImpl] Successfully enriched draft /content/forms/fp/admin/drafts/metadata/ABC123_af with custom property myPotato=baked
+INFO [DraftEnrichmentServiceImpl] Successfully enriched draft /content/forms/fp/admin/drafts/metadata/ABC123_af with custom property myCustomPropertyName=baked
 ```
 
 **Errors:**
@@ -185,7 +185,7 @@ To modify the property name or value:
 Modify the `enrichDraft()` method in `DraftEnrichmentServiceImpl.java`:
 
 ```java
-properties.put("myPotato", "baked");
+properties.put("myCustomPropertyName", "my cust property value");
 properties.put("myTomato", "fresh");
 properties.put("myCarrot", "raw");
 ```
@@ -271,6 +271,6 @@ For issues or enhancements:
 
 - **v1.0.0** - Initial implementation
   - Basic draft enrichment functionality
-  - Custom property: myPotato = "baked"
+  - Custom property: myCustomPropertyName = "my cust property value"
   - Service user configuration
   - Unit tests

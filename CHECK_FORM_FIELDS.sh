@@ -30,7 +30,7 @@ import sys, json
 data = json.load(sys.stdin)
 print(f'  name: {data.get(\"name\", \"N/A\")}')
 print(f'  owner: {data.get(\"owner\", \"N/A\")}')
-print(f'  myPotato: {data.get(\"myPotato\", \"NOT FOUND\")}')
+print(f'  myCustomPropertyName: {data.get(\"myCustomPropertyName\", \"NOT FOUND\")}')
 print(f'  myCustomDraftNameGathered: {data.get(\"myCustomDraftNameGathered\", \"NOT FOUND\")}')
 print(f'  userdataID: {data.get(\"userdataID\", \"N/A\")}')
 " 2>/dev/null

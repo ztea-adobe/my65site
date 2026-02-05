@@ -38,6 +38,7 @@ import java.util.Map;
  */
 @Component(
     service = ResourceChangeListener.class,
+    enabled = true,  // Re-enabled - this is the reliable approach
     immediate = true,
     property = {
         ResourceChangeListener.CHANGES + "=ADDED",

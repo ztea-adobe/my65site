@@ -53,8 +53,8 @@ public class DraftEnrichmentServiceImpl implements DraftEnrichmentService {
     private static final String DRAFT_PATH_PREFIX = "/content/forms/fp/admin/drafts/metadata";
     
     // Custom property constants
-    private static final String CUSTOM_PROPERTY_NAME = "myPotato";
-    private static final String CUSTOM_PROPERTY_VALUE = "baked";
+    private static final String CUSTOM_PROPERTY_NAME = "myCustomPropertyName";
+    private static final String CUSTOM_PROPERTY_VALUE = "my cust property value";
     
     // Form field extraction constants
     private static final String FORM_FIELD_NAME = "myCustomDraftName";

@@ -2,7 +2,7 @@
 
 ## Objective
 
-Add custom property `myPotato` with value `baked` to draft metadata nodes when users save adaptive forms in AEM Forms.
+Add custom property `myCustomPropertyName` with value `baked` to draft metadata nodes when users save adaptive forms in AEM Forms.
 
 ## Solution Architecture
 
@@ -33,7 +33,7 @@ Add custom property `myPotato` with value `baked` to draft metadata nodes when u
 ┌─────────────────────────────────────────────────────────┐
 │      DraftEnrichmentService (Business Logic)            │
 │   - Validates draft node                                │
-│   - Adds custom property: myPotato = "baked"           │
+│   - Adds custom property: myCustomPropertyName = "my cust property value"           │
 │   - Commits changes to JCR                             │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -70,8 +70,8 @@ Add custom property `myPotato` with value `baked` to draft metadata nodes when u
 DRAFT_NODE_TYPE = "fp:Draft"
 DRAFT_RESOURCE_TYPE = "fd/fp/components/guidereload"
 DRAFT_PATH_PREFIX = "/content/forms/fp/admin/drafts/metadata"
-CUSTOM_PROPERTY_NAME = "myPotato"
-CUSTOM_PROPERTY_VALUE = "baked"
+CUSTOM_PROPERTY_NAME = "myCustomPropertyName"
+CUSTOM_PROPERTY_VALUE = "my cust property value"
 ```
 
 #### Resource Change Listener
@@ -227,7 +227,7 @@ From `core/pom.xml`:
   - sling:resourceType = "fd/fp/components/guidereload"
   - owner = "admin"
   - name = "Contact Form Draft"
-  - myPotato = "baked"  ← Added by custom service
+  - myCustomPropertyName = "my cust property value"  ← Added by custom service
 ```
 
 ## Deployment Checklist
@@ -244,7 +244,7 @@ From `core/pom.xml`:
 
 ## Success Criteria
 
-✅ Custom property `myPotato` appears on draft nodes
+✅ Custom property `myCustomPropertyName` appears on draft nodes
 ✅ Property value is `baked`
 ✅ Property is added automatically on form save
 ✅ No errors in AEM logs
@@ -258,7 +258,7 @@ From `core/pom.xml`:
 
 **INFO (Success):**
 ```
-Successfully enriched draft /content/forms/fp/admin/drafts/metadata/[ID]_af with custom property myPotato=baked
+Successfully enriched draft /content/forms/fp/admin/drafts/metadata/[ID]_af with custom property myCustomPropertyName=baked
 ```
 
 **DEBUG:**
@@ -296,7 +296,7 @@ private static final String CUSTOM_PROPERTY_VALUE = "customValue";
 
 Modify `enrichDraft()` method:
 ```java
-properties.put("myPotato", "baked");
+properties.put("myCustomPropertyName", "my cust property value");
 properties.put("enrichedAt", Calendar.getInstance());
 properties.put("enrichedBy", "custom-service");
 properties.put("version", "1.0");

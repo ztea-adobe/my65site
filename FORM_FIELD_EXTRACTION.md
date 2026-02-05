@@ -11,7 +11,7 @@ The draft enrichment service now extracts form field values from saved drafts an
 
 When a user saves an adaptive form, the service automatically:
 
-1. ✅ Adds static property: `myPotato = "baked"`
+1. ✅ Adds static property: `myCustomPropertyName = "my cust property value"`
 2. ✅ **NEW:** Extracts form field `myCustomDraftName` value
 3. ✅ **NEW:** Adds it as: `myCustomDraftNameGathered = [extracted value]`
 
@@ -30,7 +30,7 @@ myCustomDraftName: "John's Important Form"
   "sling:resourceType": "fd/fp/components/guidereload",
   "owner": "admin",
   "name": "Form Draft",
-  "myPotato": "baked",
+  "myCustomPropertyName": "my cust property value",
   "myCustomDraftNameGathered": "John's Important Form",  ← NEW!
   "userdataID": "/content/forms/fp/admin/drafts/data/ABC123"
 }
@@ -42,7 +42,7 @@ myCustomDraftName: "John's Important Form"
 
 ```
 Draft Metadata Node
-├─ myPotato = "baked" (static value)
+├─ myCustomPropertyName = "my cust property value" (static value)
 ├─ myCustomDraftNameGathered = [extracted from form]
 └─ userdataID → points to data node
                        ↓
@@ -62,7 +62,7 @@ Draft Metadata Node
    ↓
 4. DraftEnrichmentService enrichDraft() is called
    ↓
-5. Service adds myPotato = "baked"
+5. Service adds myCustomPropertyName = "my cust property value"
    ↓
 6. Service extracts form field value:
    a. Gets userdataID from metadata
@@ -155,7 +155,7 @@ This prevents XXE (XML External Entity) attacks.
    Navigate to: `/content/forms/fp/admin/drafts/metadata/[DRAFT_ID]_af`
    
    Check for:
-   - ✅ `myPotato = "baked"`
+   - ✅ `myCustomPropertyName = "my cust property value"`
    - ✅ `myCustomDraftNameGathered = "Test Draft 123"`
 
 ### Test Different Field Values
@@ -295,13 +295,13 @@ The service includes comprehensive error handling:
 3. **XML Parse Error:** Logs error, continues with static properties
 4. **Invalid XML:** Secured parser rejects malicious XML
 
-All errors are non-blocking - the static `myPotato` property will always be added even if field extraction fails.
+All errors are non-blocking - the static `myCustomPropertyName` property will always be added even if field extraction fails.
 
 ## Logging
 
 ### Success Messages
 ```
-INFO [DraftEnrichmentServiceImpl] Added custom property myPotato=baked to draft
+INFO [DraftEnrichmentServiceImpl] Added custom property myCustomPropertyName=baked to draft
 INFO [DraftEnrichmentServiceImpl] Added form field value myCustomDraftNameGathered=John's Form to draft
 INFO [DraftEnrichmentServiceImpl] Successfully enriched draft: /content/.../[ID]_af
 ```
@@ -363,7 +363,7 @@ ERROR [DraftEnrichmentServiceImpl] Error parsing XML data to extract field
 
 ✅ **Form field extraction is now active!**
 
-- Static property: `myPotato = "baked"` ✓
+- Static property: `myCustomPropertyName = "my cust property value"` ✓
 - Dynamic property: `myCustomDraftNameGathered = [form value]` ✓
 - Supports XML parsing with multiple patterns ✓
 - Secure XML processing ✓

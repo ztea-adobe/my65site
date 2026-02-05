@@ -5,7 +5,7 @@
 Your AEM Forms draft enrichment service now does **two things** automatically when users save forms:
 
 ### 1. Static Property ✅
-- Adds: `myPotato = "baked"`
+- Adds: `myCustomPropertyName = "my cust property value"`
 - Purpose: Custom marker/flag on all drafts
 
 ### 2. Form Field Extraction ✅ NEW!
@@ -34,7 +34,7 @@ Your AEM Forms draft enrichment service now does **two things** automatically wh
 {
   "name": "Form Sample 1",
   "owner": "admin",
-  "myPotato": "baked",                          ← Always added
+  "myCustomPropertyName": "my cust property value",                          ← Always added
   "myCustomDraftNameGathered": "Important Form" ← Extracted from form!
 }
 ```
@@ -59,7 +59,7 @@ Open CRXDE: `http://localhost:4502/crx/de/index.jsp`
 Navigate to: `/content/forms/fp/admin/drafts/metadata/[DRAFT_ID]_af`
 
 You'll see:
-- ✅ `myPotato = "baked"`
+- ✅ `myCustomPropertyName = "my cust property value"`
 - ✅ `myCustomDraftNameGathered = [whatever user typed]`
 
 ## Customization
@@ -99,7 +99,7 @@ mvn clean install -PautoInstallBundle
 Draft in AEM
 │
 ├─ Metadata Node: /content/forms/fp/admin/drafts/metadata/ABC123_af
-│  ├─ myPotato = "baked"
+│  ├─ myCustomPropertyName = "my cust property value"
 │  ├─ myCustomDraftNameGathered = "Important Form"
 │  └─ userdataID = "/content/forms/fp/admin/drafts/data/XYZ789"
 │
@@ -126,7 +126,7 @@ Draft in AEM
 - [ ] Fill the field with test value (e.g., "Test Draft 001")
 - [ ] Click **Save** button
 - [ ] Open CRXDE and navigate to draft metadata
-- [ ] Verify `myPotato = "baked"` exists
+- [ ] Verify `myCustomPropertyName = "my cust property value"` exists
 - [ ] Verify `myCustomDraftNameGathered = "Test Draft 001"` exists
 - [ ] Test with different values
 - [ ] Test with empty field (property won't be added)
@@ -151,7 +151,7 @@ Draft in AEM
 ## What If Field Is Empty?
 
 If the form field is empty or not found:
-- ✅ `myPotato = "baked"` will still be added
+- ✅ `myCustomPropertyName = "my cust property value"` will still be added
 - ❌ `myCustomDraftNameGathered` won't be added (property skipped)
 - 📝 Debug log: "Field 'myCustomDraftName' not found or empty"
 
@@ -181,7 +181,7 @@ This is by design - we only add the property if there's a value.
 **What happens when user saves form:**
 1. AEM Forms creates draft
 2. Listener detects it
-3. Service adds `myPotato = "baked"`
+3. Service adds `myCustomPropertyName = "my cust property value"`
 4. Service extracts `myCustomDraftName` from form data
 5. Service adds `myCustomDraftNameGathered = [extracted value]`
 6. Done! Both properties visible in CRXDE

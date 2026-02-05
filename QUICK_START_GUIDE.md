@@ -2,7 +2,7 @@
 
 ## What This Does
 
-Automatically adds `myPotato="baked"` to draft nodes when users save adaptive forms.
+Automatically adds `myCustomPropertyName="my cust property value"` to draft nodes when users save adaptive forms.
 
 ## Quick Deploy
 
@@ -20,7 +20,7 @@ mvn clean install -PautoInstallPackage
 2. Fill some fields and click **Save**
 3. Check CRXDE: `http://localhost:4502/crx/de/index.jsp`
 4. Navigate to: `/content/forms/fp/admin/drafts/metadata/[DRAFT_ID]_af`
-5. Verify property: `myPotato = "baked"`
+5. Verify property: `myCustomPropertyName = "my cust property value"`
 
 ## Quick Verify
 

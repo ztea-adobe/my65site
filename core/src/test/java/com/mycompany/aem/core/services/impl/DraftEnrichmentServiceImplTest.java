@@ -117,8 +117,8 @@ class DraftEnrichmentServiceImplTest {
         
         // Check if property was added
         ValueMap properties = draftResource.getValueMap();
-        assertEquals("baked", properties.get("myPotato", String.class), 
-            "Should add myPotato property with value 'baked'");
+        assertEquals("my cust property value", properties.get("myCustomPropertyName", String.class), 
+            "Should add myCustomPropertyName property with value 'my cust property value'");
     }
 
     @Test
@@ -130,7 +130,7 @@ class DraftEnrichmentServiceImplTest {
             "nodeType", "fp:Draft",
             "sling:resourceType", "fd/fp/components/guidereload",
             "owner", "testuser",
-            "myPotato", "baked"
+            "myCustomPropertyName", "my cust property value"
         );
 
         // Test
@@ -141,7 +141,7 @@ class DraftEnrichmentServiceImplTest {
         
         // Property should still exist with same value
         ValueMap properties = draftResource.getValueMap();
-        assertEquals("baked", properties.get("myPotato", String.class));
+        assertEquals("my cust property value", properties.get("myCustomPropertyName", String.class));
     }
 
     @Test

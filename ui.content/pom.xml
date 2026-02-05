@@ -57,9 +57,14 @@
                     <validatorsSettings>
                         <jackrabbit-filter>
                             <options>
-                                <validRoots>/conf,/content,/content/experience-fragments,/content/dam</validRoots>
+                                <validRoots>/conf,/content,/content/experience-fragments,/content/dam,/content/dam/formsanddocuments-themes,/content/dam/formsanddocuments-fdm</validRoots>
                             </options>
                         </jackrabbit-filter>
+                        <jackrabbit-nodetypes>
+                            <options>
+                                <severity>warn</severity>
+                            </options>
+                        </jackrabbit-nodetypes>
                     </validatorsSettings>
                     <dependencies>
                         <dependency>

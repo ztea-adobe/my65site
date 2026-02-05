@@ -2,7 +2,7 @@
 
 ## Current Status
 
-✅ `myPotato = "baked"` is working  
+✅ `myCustomPropertyName = "my cust property value"` is working  
 ❌ `myCustomDraftNameGathered` is NOT appearing  
 
 This means the service is running, but the form field extraction isn't finding the field value.
@@ -69,7 +69,7 @@ AEM Forms might be storing data in a different format than expected.
 2. Navigate to: `/content/forms/fp/admin/drafts/metadata/`
 3. Find your newest draft (ends with `_af`)
 4. Check for properties:
-   - ✅ `myPotato` should = `"baked"`
+   - ✅ `myCustomPropertyName` should = `"my cust property value"`
    - ❓ `myCustomDraftNameGathered` should = `"TEST VALUE 123"`
 
 ### Step 4: Check Draft Data
@@ -95,7 +95,7 @@ Then trigger enrichment by:
 2. Or saving the form again
 
 Look for log messages:
-- ✅ `"Added custom property myPotato=baked"`
+- ✅ `"Added custom property myCustomPropertyName=baked"`
 - ❌ `"Field 'myCustomDraftName' not found in XML data"`
 - ❌ `"No userdataID property found"`
 - ❌ `"Data resource not found"`
@@ -227,11 +227,11 @@ When everything is configured correctly:
 2. User clicks Save
 3. Draft created at `/content/forms/fp/admin/drafts/metadata/[ID]_af`
 4. Properties on node:
-   - `myPotato = "baked"` ✅
+   - `myCustomPropertyName = "my cust property value"` ✅
    - `myCustomDraftNameGathered = "John's Draft"` ✅
 5. Logs show:
    ```
-   INFO Added custom property myPotato=baked to draft
+   INFO Added custom property myCustomPropertyName=baked to draft
    INFO Added form field value myCustomDraftNameGathered=John's Draft to draft
    INFO Successfully enriched draft
    ```

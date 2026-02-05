@@ -7,7 +7,7 @@
 
 ## The Problem
 
-When you saved an adaptive form, the `myPotato` property was not being added to draft nodes.
+When you saved an adaptive form, the `myCustomPropertyName` property was not being added to draft nodes.
 
 ### Root Cause
 
@@ -24,7 +24,7 @@ The validation code was checking the wrong property:
   "sling:resourceType": "fd/fp/components/guidereload",
   "owner": "admin",
   "name": "Form Sample 1",
-  "myPotato": "baked"  ← This should now appear!
+  "myCustomPropertyName": "my cust property value"  ← This should now appear!
 }
 ```
 
@@ -56,7 +56,7 @@ Tested on existing draft node: `5BRRMRRMO6PYCFEHLVHQXCQ4IM_af`
 
 **Result:**
 ```
-✅ myPotato: baked
+✅ myCustomPropertyName: baked
 ```
 
 ## Testing the Fix
@@ -80,7 +80,7 @@ Tested on existing draft node: `5BRRMRRMO6PYCFEHLVHQXCQ4IM_af`
    ```
    - Navigate to: `/content/forms/fp/admin/drafts/metadata/`
    - Find the newest draft node (ends with `_af`)
-   - Verify: `myPotato = "baked"` ✅
+   - Verify: `myCustomPropertyName = "my cust property value"` ✅
 
 ### Option 2: Modify Existing Draft
 
@@ -103,7 +103,7 @@ Tested on existing draft node: `5BRRMRRMO6PYCFEHLVHQXCQ4IM_af`
 
 5. **Refresh the Node**
    - Remove the test property if you want
-   - Verify: `myPotato = "baked"` should now be present ✅
+   - Verify: `myCustomPropertyName = "my cust property value"` should now be present ✅
 
 ### Option 3: Check Existing Drafts
 
@@ -114,7 +114,7 @@ Some existing drafts may already have been enriched. Check:
 http://localhost:4502/content/forms/fp/admin/drafts/metadata/5BRRMRRMO6PYCFEHLVHQXCQ4IM_af.json
 ```
 
-Look for: `"myPotato": "baked"`
+Look for: `"myCustomPropertyName": "my cust property value"`
 
 ## What Changed
 
@@ -156,7 +156,7 @@ mvn clean install -PautoInstallBundle
    ✅ nodeType == "fp:Draft" (NOW CORRECT!)
    ✅ sling:resourceType == "fd/fp/components/guidereload"
    ↓
-5. Service adds: myPotato = "baked"
+5. Service adds: myCustomPropertyName = "my cust property value"
    ↓
 6. Changes committed to JCR
    ↓
@@ -179,7 +179,7 @@ Every time you save an adaptive form from now on, the draft node will automatica
 ```json
 {
   ...
-  "myPotato": "baked"
+  "myCustomPropertyName": "my cust property value"
 }
 ```
 
@@ -213,7 +213,7 @@ Every time you save an adaptive form from now on, the draft node will automatica
    Look for success messages:
    ```
    INFO [DraftEnrichmentServiceImpl] Successfully enriched draft 
-   /content/forms/fp/admin/drafts/metadata/[ID]_af with custom property myPotato=baked
+   /content/forms/fp/admin/drafts/metadata/[ID]_af with custom property myCustomPropertyName=baked
    ```
 
 4. **Verify Node Structure**
@@ -238,7 +238,7 @@ The issue was a simple property name mismatch. AEM Forms uses `nodeType` (not `j
 
 **Testing Verified:**
 - ✅ Draft node: `5BRRMRRMO6PYCFEHLVHQXCQ4IM_af`
-- ✅ Property added: `myPotato = "baked"`
+- ✅ Property added: `myCustomPropertyName = "my cust property value"`
 - ✅ All tests passing: 13/13
 - ✅ Bundle deployed and active
 

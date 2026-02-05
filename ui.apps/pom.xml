@@ -54,6 +54,13 @@
                     <group>com.mycompany.aem</group>
                     <name>my65site.ui.apps</name>
                     <packageType>application</packageType>
+                    <validatorsSettings>
+                        <jackrabbit-filter>
+                            <options>
+                                <validRoots>/apps</validRoots>
+                            </options>
+                        </jackrabbit-filter>
+                    </validatorsSettings>
                     <repositoryStructurePackages>
                         <repositoryStructurePackage>
                             <groupId>com.mycompany.aem</groupId>
@@ -96,6 +103,9 @@
                             <generateJavaClasses>true</generateJavaClasses>
                             <generatedJavaClassesPrefix>org.apache.sling.scripting.sightly</generatedJavaClassesPrefix>
                             <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                            <excludes>
+                                <exclude>**/forms/portal/**/*.html</exclude>
+                            </excludes>
                             <allowedExpressionOptions>
                                 <allowedExpressionOption>cssClassName</allowedExpressionOption>
                                 <allowedExpressionOption>decoration</allowedExpressionOption>

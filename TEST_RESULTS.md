@@ -193,7 +193,7 @@ This will:
    - DraftEnrichmentServiceImpl
    - DraftSaveListener
 3. Test with adaptive form save
-4. Verify `myPotato="baked"` property in CRXDE
+4. Verify `myCustomPropertyName="my cust property value"` property in CRXDE
 
 ---
 

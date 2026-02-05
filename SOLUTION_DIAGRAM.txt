@@ -100,7 +100,7 @@ USER INTERACTION FLOW
 │  │ 1. Adapt resource to ModifiableValueMap                  │       │
 │  │ 2. Check if property already exists (skip if present)    │       │
 │  │ 3. Add property:                                          │       │
-│  │    properties.put("myPotato", "baked")                   │       │
+│  │    properties.put("myCustomPropertyName", "baked")                   │       │
 │  │ 4. Commit changes: resolver.commit()                     │       │
 │  │ 5. Log success message                                    │       │
 │  └──────────────────────────────────────────────────────────┘       │
@@ -121,7 +121,7 @@ USER INTERACTION FLOW
 │  ├─ sling:resourceType = "fd/fp/components/guidereload"             │
 │  ├─ owner = "john.doe"                                               │
 │  ├─ name = "Contact Form Draft"                                      │
-│  ├─ myPotato = "baked"  ◄─── CUSTOM PROPERTY ADDED ✓                │
+│  ├─ myCustomPropertyName = "baked"  ◄─── CUSTOM PROPERTY ADDED ✓                │
 │  └─ [other properties...]                                            │
 │                                                                       │
 │  ✅ SUCCESS: Custom property successfully added to draft node         │
@@ -162,7 +162,7 @@ COMPONENT ARCHITECTURE
 │  │ Constants:                                               │  │
 │  │ • DRAFT_NODE_TYPE = "fp:Draft"                          │  │
 │  │ • DRAFT_RESOURCE_TYPE = "fd/fp/components/guidereload" │  │
-│  │ • CUSTOM_PROPERTY_NAME = "myPotato"                     │  │
+│  │ • CUSTOM_PROPERTY_NAME = "myCustomPropertyName"                     │  │
 │  │ • CUSTOM_PROPERTY_VALUE = "baked"                       │  │
 │  │                                                          │  │
 │  │ Methods:                                                 │  │
@@ -283,7 +283,7 @@ VERIFICATION CHECKLIST
 □ Functional test passed
   1. Open adaptive form
   2. Fill and save form
-  3. Check CRXDE for myPotato property
+  3. Check CRXDE for myCustomPropertyName property
   4. Verify value = "baked"
 
 □ Logs show success

@@ -74,7 +74,7 @@ Now that everything is configured, test the functionality:
    - Open CRXDE Lite: `http://localhost:4502/crx/de/index.jsp`
    - Navigate to: `/content/forms/fp/admin/drafts/metadata/`
    - Find your draft node (pattern: `[DRAFT_ID]_af`)
-   - Check for property: `myPotato = "baked"`
+   - Check for property: `myCustomPropertyName = "my cust property value"`
 
 ### Method 2: Create Test Draft via CRXDE
 
@@ -109,7 +109,7 @@ Now that everything is configured, test the functionality:
 
 6. **Refresh and Verify**
    - Refresh the node in CRXDE
-   - Check if `myPotato = "baked"` was added
+   - Check if `myCustomPropertyName = "my cust property value"` was added
 
 ### Method 3: Check AEM Logs
 
@@ -123,7 +123,7 @@ tail -f [AEM_INSTALL_DIR]/crx-quickstart/logs/error.log | grep -i draft
 **Success Message:**
 ```
 INFO [DraftEnrichmentServiceImpl] Successfully enriched draft 
-/content/forms/fp/admin/drafts/metadata/[ID]_af with custom property myPotato=baked
+/content/forms/fp/admin/drafts/metadata/[ID]_af with custom property myCustomPropertyName=baked
 ```
 
 **If Still Errors:**
@@ -140,7 +140,7 @@ Before testing, ensure:
 - [x] DraftEnrichmentServiceImpl component is active
 - [x] DraftSaveListener component is active
 - [ ] Test with adaptive form save (manual test required)
-- [ ] Verify `myPotato` property appears in CRXDE (manual test required)
+- [ ] Verify `myCustomPropertyName` property appears in CRXDE (manual test required)
 
 ## Troubleshooting
 
@@ -194,7 +194,7 @@ Before testing, ensure:
    ↓
 5. DraftEnrichmentService validates it's a draft node
    ↓
-6. Service adds property: myPotato = "baked"
+6. Service adds property: myCustomPropertyName = "my cust property value"
    ↓
 7. Changes committed to JCR
    ↓
@@ -240,7 +240,7 @@ If you encounter issues:
 ✅ **Components are active and ready**  
 ⏭️ **Ready for functional testing**
 
-The LoginException error has been resolved. The system is now ready to automatically add `myPotato="baked"` to draft nodes when users save adaptive forms!
+The LoginException error has been resolved. The system is now ready to automatically add `myCustomPropertyName="my cust property value"` to draft nodes when users save adaptive forms!
 
 ---
 
