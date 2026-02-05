@@ -43,7 +43,7 @@ import java.util.Map;
     property = {
         ResourceChangeListener.CHANGES + "=ADDED",
         ResourceChangeListener.CHANGES + "=CHANGED",
-        ResourceChangeListener.PATHS + "=/content/forms/fp/admin/drafts/metadata"
+        ResourceChangeListener.PATHS + "=/content/forms/fp"
     }
 )
 @ServiceDescription("Listener for draft save events to add custom properties")

@@ -50,7 +50,8 @@ public class DraftEnrichmentServiceImpl implements DraftEnrichmentService {
     // Constants for draft identification
     private static final String DRAFT_NODE_TYPE = "fp:Draft";
     private static final String DRAFT_RESOURCE_TYPE = "fd/fp/components/guidereload";
-    private static final String DRAFT_PATH_PREFIX = "/content/forms/fp/admin/drafts/metadata";
+    private static final String DRAFT_PATH_PREFIX = "/content/forms/fp";
+    private static final String DRAFT_METADATA_PATH_SEGMENT = "/drafts/metadata/";
     
     // Custom property constants
     private static final String CUSTOM_PROPERTY_NAME = "myCustomPropertyName";
@@ -133,9 +134,9 @@ public class DraftEnrichmentServiceImpl implements DraftEnrichmentService {
             return false;
         }
 
-        // Check if path is under drafts metadata
+        // Check if path is under drafts metadata (admin: .../admin/drafts/metadata/ or user: .../username/drafts/metadata/)
         String path = resource.getPath();
-        if (!path.startsWith(DRAFT_PATH_PREFIX)) {
+        if (!path.startsWith(DRAFT_PATH_PREFIX) || !path.contains(DRAFT_METADATA_PATH_SEGMENT)) {
             return false;
         }
 
