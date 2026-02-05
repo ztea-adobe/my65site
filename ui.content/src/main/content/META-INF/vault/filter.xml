@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/conf/my65site" mode="merge"/>
+    <filter root="/content/my65site" mode="merge"/>
+    <filter root="/content/dam/my65site" mode="merge">
+        <exclude pattern="/content/dam/my65site(/.*)?"/>
+        <include pattern="/content/dam/my65site/jcr:content(/.*)?"/>
+    </filter>
+    <filter root="/content/dam/my65site/asset.jpg" mode="merge"/>
+    <filter root="/content/experience-fragments/my65site" mode="merge"/>
+    <filter root="/content/dam/formsanddocuments-themes/my65site" mode="merge"/>
+    <filter root="/content/dam/formsanddocuments-fdm/my65site" mode="merge"/>
+    <filter root="/content/dam/my65site/sample_logo.png" mode="merge"/>
+    <filter root="/content/dam/my65site/sample_terms.png" mode="merge"/>
+    <filter root="/content/dam/my65site/wknd_logo.png" mode="merge"/>
+</workspaceFilter>

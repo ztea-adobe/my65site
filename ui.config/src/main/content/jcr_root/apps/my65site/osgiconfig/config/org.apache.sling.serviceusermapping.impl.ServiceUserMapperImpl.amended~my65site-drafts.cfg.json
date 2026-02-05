@@ -1,0 +1,5 @@
+{
+    "user.mapping": [
+        "my65site.core:draftEnrichmentService=draftEnrichmentService"
+    ]
+}

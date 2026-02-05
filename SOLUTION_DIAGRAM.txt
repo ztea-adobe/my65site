@@ -1,0 +1,318 @@
+===============================================================================
+    DRAFT CUSTOM PROPERTY SOLUTION - TECHNICAL FLOW DIAGRAM
+===============================================================================
+
+USER INTERACTION FLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌───────────────────────────────────────────────────────────────────────┐
+│  Step 1: User Fills Adaptive Form                                    │
+│  ─────────────────────────────────────────────────────────────────    │
+│                                                                       │
+│  URL: http://localhost:4502/content/forms/af/myform.html            │
+│                                                                       │
+│  ┌─────────────────────────────────────────────┐                    │
+│  │  [Adaptive Form UI]                         │                    │
+│  │                                              │                    │
+│  │  Name:    [John Doe____________]             │                    │
+│  │  Email:   [john@example.com____]             │                    │
+│  │  Phone:   [555-1234____________]             │                    │
+│  │                                              │                    │
+│  │  [Submit]  [Save]  [Clear]                   │  ← User clicks Save│
+│  └─────────────────────────────────────────────┘                    │
+└───────────────────────────────────────────────────────────────────────┘
+                               │
+                               │ Click Save
+                               ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│  Step 2: AEM Forms Portal Processes Save Request                     │
+│  ─────────────────────────────────────────────────────────────────    │
+│                                                                       │
+│  AEM Forms Default Behavior:                                          │
+│  • Captures form data                                                 │
+│  • Generates unique draft ID                                          │
+│  • Creates/updates draft node in JCR                                  │
+│                                                                       │
+│  Draft Node Created at:                                               │
+│  /content/forms/fp/admin/drafts/metadata/SMKJXF75QCAR3TJ7KQETHG7HFU_af│
+│                                                                       │
+│  Standard Properties Set:                                             │
+│  ├─ jcr:primaryType = "fp:Draft"                                     │
+│  ├─ sling:resourceType = "fd/fp/components/guidereload"             │
+│  ├─ owner = "john.doe"                                               │
+│  ├─ name = "Contact Form Draft"                                      │
+│  └─ [other standard draft properties...]                             │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+                               │
+                               │ JCR Event: Node Added/Changed
+                               ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│  Step 3: DraftSaveListener Detects Change                            │
+│  ─────────────────────────────────────────────────────────────────    │
+│                                                                       │
+│  Component: com.mycompany.aem.core.listeners.DraftSaveListener       │
+│  Type: ResourceChangeListener (OSGi Service)                          │
+│                                                                       │
+│  Listener Configuration:                                              │
+│  ┌──────────────────────────────────────────────────────────┐       │
+│  │ @Component(                                               │       │
+│  │   service = ResourceChangeListener.class,                │       │
+│  │   property = {                                            │       │
+│  │     CHANGES = "ADDED",                                    │       │
+│  │     CHANGES = "CHANGED",                                  │       │
+│  │     PATHS = "/content/forms/fp/admin/drafts/metadata"    │       │
+│  │   }                                                        │       │
+│  │ )                                                          │       │
+│  └──────────────────────────────────────────────────────────┘       │
+│                                                                       │
+│  Processing:                                                          │
+│  1. Receives ResourceChange event                                    │
+│  2. Gets service resource resolver (with write permissions)          │
+│  3. Retrieves resource from path                                     │
+│  4. Passes resource to DraftEnrichmentService                        │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+                               │
+                               │ Calls Service
+                               ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│  Step 4: DraftEnrichmentService Validates and Enriches               │
+│  ─────────────────────────────────────────────────────────────────    │
+│                                                                       │
+│  Component: com.mycompany.aem.core.services.impl.                    │
+│             DraftEnrichmentServiceImpl                                │
+│                                                                       │
+│  Validation Logic (isDraftNode method):                               │
+│  ┌──────────────────────────────────────────────────────────┐       │
+│  │ ✓ Check path starts with:                                │       │
+│  │   /content/forms/fp/admin/drafts/metadata                │       │
+│  │                                                            │       │
+│  │ ✓ Check node type:                                        │       │
+│  │   jcr:primaryType == "fp:Draft"                          │       │
+│  │                                                            │       │
+│  │ ✓ Check resource type:                                    │       │
+│  │   sling:resourceType == "fd/fp/components/guidereload"   │       │
+│  └──────────────────────────────────────────────────────────┘       │
+│                                                                       │
+│  Enrichment Logic (enrichDraft method):                               │
+│  ┌──────────────────────────────────────────────────────────┐       │
+│  │ 1. Adapt resource to ModifiableValueMap                  │       │
+│  │ 2. Check if property already exists (skip if present)    │       │
+│  │ 3. Add property:                                          │       │
+│  │    properties.put("myPotato", "baked")                   │       │
+│  │ 4. Commit changes: resolver.commit()                     │       │
+│  │ 5. Log success message                                    │       │
+│  └──────────────────────────────────────────────────────────┘       │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+                               │
+                               │ Commit to JCR
+                               ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│  Step 5: Updated Draft Node in JCR                                   │
+│  ─────────────────────────────────────────────────────────────────    │
+│                                                                       │
+│  Final Node Structure:                                                │
+│  /content/forms/fp/admin/drafts/metadata/SMKJXF75QCAR3TJ7KQETHG7HFU_af│
+│                                                                       │
+│  Properties:                                                          │
+│  ├─ jcr:primaryType = "fp:Draft"                                     │
+│  ├─ sling:resourceType = "fd/fp/components/guidereload"             │
+│  ├─ owner = "john.doe"                                               │
+│  ├─ name = "Contact Form Draft"                                      │
+│  ├─ myPotato = "baked"  ◄─── CUSTOM PROPERTY ADDED ✓                │
+│  └─ [other properties...]                                            │
+│                                                                       │
+│  ✅ SUCCESS: Custom property successfully added to draft node         │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+COMPONENT ARCHITECTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────────────────────────────────────────────────────┐
+│                         OSGi Container                           │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │ DraftSaveListener                                        │  │
+│  │ (ResourceChangeListener)                                 │  │
+│  │                                                          │  │
+│  │ • Monitors: /content/forms/fp/admin/drafts/metadata    │  │
+│  │ • Events: ADDED, CHANGED                                │  │
+│  │ • Uses: Service Resource Resolver                      │  │
+│  │                                                          │  │
+│  │    @Reference ──────────┐                               │  │
+│  └────────────────────────│───────────────────────────────┘  │
+│                           │                                    │
+│                           │                                    │
+│  ┌────────────────────────▼───────────────────────────────┐  │
+│  │ DraftEnrichmentService (Interface)                     │  │
+│  │                                                          │  │
+│  │ + enrichDraft(Resource): boolean                        │  │
+│  │ + isDraftNode(Resource): boolean                        │  │
+│  └────────────────────────┬───────────────────────────────┘  │
+│                           │                                    │
+│                           │ implements                         │
+│  ┌────────────────────────▼───────────────────────────────┐  │
+│  │ DraftEnrichmentServiceImpl                              │  │
+│  │ (@Component, immediate=true)                            │  │
+│  │                                                          │  │
+│  │ Constants:                                               │  │
+│  │ • DRAFT_NODE_TYPE = "fp:Draft"                          │  │
+│  │ • DRAFT_RESOURCE_TYPE = "fd/fp/components/guidereload" │  │
+│  │ • CUSTOM_PROPERTY_NAME = "myPotato"                     │  │
+│  │ • CUSTOM_PROPERTY_VALUE = "baked"                       │  │
+│  │                                                          │  │
+│  │ Methods:                                                 │  │
+│  │ • enrichDraft() - Adds custom property                  │  │
+│  │ • isDraftNode() - Validates draft                       │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+
+SECURITY & PERMISSIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Service User: draftEnrichmentService
+Location: /home/users/system/my65site/draftEnrichmentService
+
+Permissions (ACL):
+┌─────────────────────────────────────────────────────────────────┐
+│ Path: /content/forms/fp/admin/drafts                            │
+│ ├─ jcr:read ✓                                                   │
+│ ├─ jcr:write ✓                                                  │
+│ └─ jcr:modifyProperties ✓                                       │
+│                                                                  │
+│ Path: /content/forms/fp/admin/drafts/metadata                   │
+│ ├─ jcr:read ✓                                                   │
+│ ├─ jcr:write ✓                                                  │
+│ └─ jcr:modifyProperties ✓                                       │
+└─────────────────────────────────────────────────────────────────┘
+
+Service User Mapping:
+┌─────────────────────────────────────────────────────────────────┐
+│ Bundle: my65site.core                                            │
+│ Subservice: draftEnrichmentService                               │
+│ Maps to: draftEnrichmentService (system user)                    │
+└─────────────────────────────────────────────────────────────────┘
+
+
+CONFIGURATION FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Service User Mapping
+   File: org.apache.sling.serviceusermapping.impl.
+         ServiceUserMapperImpl.amended~my65site-drafts.cfg.json
+   
+   {
+     "user.mapping": [
+       "my65site.core:draftEnrichmentService=draftEnrichmentService"
+     ]
+   }
+
+2. Repository Initialization
+   File: org.apache.sling.jcr.repoinit.
+         RepositoryInitializer~my65site.cfg.json
+   
+   Scripts:
+   • Create service user: draftEnrichmentService
+   • Set ACL permissions on draft paths
+
+
+DEPLOYMENT FLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌────────────────┐
+│ mvn clean      │
+│ install        │
+│ -PautoInstall  │
+│ Package        │
+└────────┬───────┘
+         │
+         ├──────────────────┬─────────────────┬──────────────────┐
+         ▼                  ▼                 ▼                  ▼
+┌────────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│ Build Core     │  │ Build UI     │  │ Build UI     │  │ Package &    │
+│ Bundle         │  │ Apps         │  │ Config       │  │ Deploy       │
+│                │  │              │  │              │  │              │
+│ • Compile Java │  │ • Client     │  │ • OSGi       │  │ • Create     │
+│ • Run Tests    │  │   Libraries  │  │   Configs    │  │   Content    │
+│ • Create JAR   │  │ • Components │  │ • Service    │  │   Package    │
+│                │  │              │  │   Users      │  │ • Deploy to  │
+│                │  │              │  │              │  │   AEM        │
+└────────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘
+         │                 │                  │                 │
+         └─────────────────┴──────────────────┴─────────────────┘
+                                    │
+                                    ▼
+                        ┌───────────────────────┐
+                        │ AEM Instance          │
+                        │                       │
+                        │ • Install Bundle      │
+                        │ • Execute Repoinit    │
+                        │ • Register Components │
+                        │ • Activate Services   │
+                        └───────────────────────┘
+
+
+VERIFICATION CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ Core bundle deployed and active
+  URL: http://localhost:4502/system/console/bundles
+  Bundle: My AEM 6.5.8 Site - Core
+  Status: Active
+
+□ OSGi components registered
+  URL: http://localhost:4502/system/console/components
+  • DraftEnrichmentServiceImpl - Active
+  • DraftSaveListener - Active
+
+□ Service user created
+  URL: http://localhost:4502/useradmin
+  User: draftEnrichmentService
+  Path: /home/users/system/my65site
+
+□ Permissions granted
+  URL: http://localhost:4502/useradmin → draftEnrichmentService → Permissions
+  Check: Read/Write on /content/forms/fp/admin/drafts
+
+□ Functional test passed
+  1. Open adaptive form
+  2. Fill and save form
+  3. Check CRXDE for myPotato property
+  4. Verify value = "baked"
+
+□ Logs show success
+  Check logs for: "Successfully enriched draft"
+
+
+TROUBLESHOOTING GUIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Issue: Property Not Added
+├─ Check: Bundle active?
+├─ Check: Components active?
+├─ Check: Service user exists?
+├─ Check: Permissions correct?
+└─ Solution: Restart bundle or redeploy
+
+Issue: Permission Denied
+├─ Check: Service user mapping
+├─ Check: ACL permissions
+└─ Solution: Re-run repoinit scripts
+
+Issue: Listener Not Triggering
+├─ Check: Path configuration
+├─ Check: Change types (ADDED/CHANGED)
+└─ Solution: Verify listener registration
+
+Issue: Draft Path Mismatch
+├─ Check: Actual draft path in CRXDE
+├─ Check: Path prefix in code
+└─ Solution: Update DRAFT_PATH_PREFIX constant
+
+===============================================================================
