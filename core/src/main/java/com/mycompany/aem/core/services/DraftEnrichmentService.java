@@ -16,6 +16,7 @@
 package com.mycompany.aem.core.services;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 
 /**
  * Service interface for enriching draft metadata with custom properties.
@@ -37,4 +38,14 @@ public interface DraftEnrichmentService {
      * @return true if the resource is a draft, false otherwise
      */
     boolean isDraftNode(Resource resource);
+
+    /**
+     * Returns the form field value (myCustomDraftName) for a draft by its draftID.
+     * Finds the metadata node via draftID, then reads userdataID and extracts the field from draft data.
+     *
+     * @param resolver Resource resolver (e.g. service resolver) with read access to /content/forms
+     * @param draftId  The draftID (e.g. "XDQIEU4KLIRQUAB4DLM2ZIO2YQ_af")
+     * @return The field value, or null if not found
+     */
+    String getFormFieldValueForDraftId(ResourceResolver resolver, String draftId);
 }

@@ -28,6 +28,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -35,6 +38,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.regex.Pattern;
 
 /**
  * Implementation of DraftEnrichmentService that adds custom properties to draft metadata.
@@ -157,6 +161,56 @@ public class DraftEnrichmentServiceImpl implements DraftEnrichmentService {
         }
 
         return isDraft;
+    }
+
+    private static final Pattern SAFE_DRAFT_ID = Pattern.compile("^[a-zA-Z0-9_]+$");
+
+    @Override
+    public String getFormFieldValueForDraftId(ResourceResolver resolver, String draftId) {
+        if (resolver == null || draftId == null || draftId.isEmpty()) {
+            return null;
+        }
+        if (!SAFE_DRAFT_ID.matcher(draftId).matches()) {
+            LOG.warn("Invalid draftId format, rejected: {}", draftId);
+            return null;
+        }
+        try {
+            Resource draftResource = findDraftMetadataByDraftId(resolver, draftId);
+            if (draftResource == null) {
+                LOG.debug("No draft metadata found for draftId: {}", draftId);
+                return null;
+            }
+            return extractFormFieldValue(draftResource, resolver);
+        } catch (Exception e) {
+            LOG.error("Error getting form field value for draftId: {}", draftId, e);
+            return null;
+        }
+    }
+
+    /**
+     * Finds the draft metadata resource by draftID property under /content/forms/fp.
+     */
+    private Resource findDraftMetadataByDraftId(ResourceResolver resolver, String draftId) {
+        try {
+            Session session = resolver.adaptTo(Session.class);
+            if (session == null) {
+                return null;
+            }
+            QueryManager qm = session.getWorkspace().getQueryManager();
+            String sql2 = "SELECT * FROM [nt:unstructured] AS n WHERE n.[draftID] = '" + draftId.replace("'", "''") + "' AND ISDESCENDANTNODE(n, '/content/forms/fp')";
+            Query query = qm.createQuery(sql2, Query.JCR_SQL2);
+            javax.jcr.NodeIterator it = query.execute().getNodes();
+            while (it.hasNext()) {
+                javax.jcr.Node node = it.nextNode();
+                Resource r = resolver.getResource(node.getPath());
+                if (r != null && isDraftNode(r)) {
+                    return r;
+                }
+            }
+        } catch (Exception e) {
+            LOG.debug("Query for draftId failed: {}", e.getMessage());
+        }
+        return null;
     }
 
     /**
